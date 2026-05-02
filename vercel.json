@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd TF-Weather && npm ci",
+  "buildCommand": "cd TF-Weather && npm run build",
+  "outputDirectory": "TF-Weather/dist",
+  "framework": "vite"
+}
