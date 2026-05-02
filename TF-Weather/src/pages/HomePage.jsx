@@ -313,7 +313,7 @@ function HomePage() {
                 disabled={loading || !hasWeatherApiKey}
               >
                 <i className="fa-solid fa-location-crosshairs me-2" />
-                Dùng vị trí của tôi
+                Vị trí của tôi
               </button>
             </div>
 
