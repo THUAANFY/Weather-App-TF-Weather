@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.openweathermap.org/data/2.5'
+﻿const BASE_URL = 'https://api.openweathermap.org/data/2.5'
 const ONE_CALL_URL = 'https://api.openweathermap.org/data/3.0/onecall'
 const GEO_URL = 'https://api.openweathermap.org/geo/1.0'
 
@@ -7,7 +7,7 @@ export const hasWeatherApiKey = Boolean(apiKey)
 
 function ensureApiKey() {
   if (!apiKey) {
-    throw new Error('Thi?u API key OpenWeatherMap. H�y c?u h�nh VITE_OPENWEATHER_API_KEY trong file .env.')
+    throw new Error('Thiếu API key OpenWeatherMap. Hãy cấu hình VITE_OPENWEATHER_API_KEY trong file .env.')
   }
 }
 
@@ -24,7 +24,7 @@ async function safeFetchJson(url, fallbackMessage) {
   } catch (error) {
     if (error instanceof TypeError) {
       throw new Error(
-        'L?i m?ng: kh�ng th? k?t n?i t?i d?ch v? th?i ti?t. H�y ki?m tra internet, VPN/proxy ho?c extension ch?n request.',
+        'Lỗi mạng: không thể kết nối tới dịch vụ thời tiết. Hãy kiểm tra internet, VPN/proxy hoặc extension chặn request.',
         { cause: error },
       )
     }
@@ -38,7 +38,7 @@ async function fetchJson(path, params) {
   Object.entries({ ...params, appid: apiKey, units: 'metric', lang: 'vi' }).forEach(([key, value]) => {
     url.searchParams.set(key, String(value))
   })
-  return safeFetchJson(url, 'Y�u c?u OpenWeatherMap th?t b?i.')
+  return safeFetchJson(url, 'Yêu cầu OpenWeatherMap thất bại.')
 }
 
 async function fetchOneCall(lat, lon) {
@@ -53,7 +53,7 @@ async function fetchOneCall(lat, lon) {
   }).forEach(([key, value]) => {
     url.searchParams.set(key, String(value))
   })
-  return safeFetchJson(url, 'Y�u c?u One Call 3.0 th?t b?i.')
+  return safeFetchJson(url, 'Yêu cầu One Call 3.0 thất bại.')
 }
 
 function mapOneCallCurrent(oneCall, cityName, countryCode) {
@@ -80,7 +80,7 @@ function mapOneCallCurrent(oneCall, cityName, countryCode) {
       sunrise: c.sunrise,
       sunset: c.sunset,
     },
-    weather: c.weather || [{ main: 'Clouds', description: 'Nhi?u m�y' }],
+    weather: c.weather || [{ main: 'Clouds', description: 'Nhiều mây' }],
   }
 }
 
@@ -89,7 +89,7 @@ function mapOneCallForecast(oneCall) {
     dt: item.dt,
     dt_txt: new Date(item.dt * 1000).toISOString().replace('T', ' ').slice(0, 19),
     main: { temp: item.temp },
-    weather: item.weather || [{ main: 'Clouds', description: 'Nhi?u m�y' }],
+    weather: item.weather || [{ main: 'Clouds', description: 'Nhiều mây' }],
   }))
   return { list }
 }
@@ -104,7 +104,7 @@ function mapOneCallExtras(oneCall) {
 
 async function fetchCityMeta(city) {
   const results = await searchLocationsByName(city, 1)
-  if (!results.length) throw new Error('Kh�ng t�m th?y th�nh ph?.')
+  if (!results.length) throw new Error('Không tìm thấy thành phố.')
   return results[0]
 }
 
@@ -172,10 +172,10 @@ async function reverseGeocode(lat, lon) {
   url.searchParams.set('lon', String(lon))
   url.searchParams.set('limit', '1')
   url.searchParams.set('appid', apiKey)
-  const data = await safeFetchJson(url, 'Y�u c?u reverse geocoding OpenWeatherMap th?t b?i.')
+  const data = await safeFetchJson(url, 'Yeu cau reverse geocoding OpenWeatherMap that bai.')
   const item = data?.[0]
   return {
-    name: item?.name || 'V? tr� hi?n t?i',
+    name: item?.name || 'Vi tri hien tai',
     country_code: item?.country || '--',
   }
 }
@@ -186,7 +186,7 @@ export async function searchLocationsByName(query, limit = 5) {
   url.searchParams.set('q', query)
   url.searchParams.set('limit', String(limit))
   url.searchParams.set('appid', apiKey)
-  const data = await safeFetchJson(url, 'Y�u c?u geocoding OpenWeatherMap th?t b?i.')
+  const data = await safeFetchJson(url, 'Yeu cau geocoding OpenWeatherMap that bai.')
   return (data || []).map((item) => ({
     name: item.name,
     state: item.state,
